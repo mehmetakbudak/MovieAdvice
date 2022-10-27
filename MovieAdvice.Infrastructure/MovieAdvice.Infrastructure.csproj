@@ -4,4 +4,12 @@
     <TargetFramework>net6.0</TargetFramework>   
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.8.0" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\MovieAdvice.Model\MovieAdvice.Model.csproj" />
+  </ItemGroup>
+
 </Project>

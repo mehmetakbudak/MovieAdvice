@@ -11,7 +11,7 @@ using MovieAdvice.Repository;
 
 namespace MovieAdvice.Repository.Migrations
 {
-    [DbContext(typeof(MovieContext))]
+    [DbContext(typeof(MovieAdviceContext))]
     [Migration("20221022191624_Initial-Create")]
     partial class InitialCreate
     {

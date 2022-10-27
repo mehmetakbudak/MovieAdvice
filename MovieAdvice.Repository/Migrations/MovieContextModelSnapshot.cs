@@ -10,7 +10,7 @@ using MovieAdvice.Repository;
 
 namespace MovieAdvice.Repository.Migrations
 {
-    [DbContext(typeof(MovieContext))]
+    [DbContext(typeof(MovieAdviceContext))]
     partial class MovieContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

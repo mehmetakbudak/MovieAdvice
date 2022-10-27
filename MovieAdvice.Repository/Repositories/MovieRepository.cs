@@ -15,9 +15,9 @@ namespace MovieAdvice.Repository.Repositories
     }
     public class MovieRepository : IMovieRepository
     {
-        private readonly MovieContext _context;
+        private readonly MovieAdviceContext _context;
 
-        public MovieRepository(MovieContext context)
+        public MovieRepository(MovieAdviceContext context)
         {
             _context = context;
         }

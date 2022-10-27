@@ -14,9 +14,9 @@ namespace MovieAdvice.Repository.Repositories
 
     public class UnitOfWork : IUnitOfWork
     {
-        private readonly MovieContext _context;
+        private readonly MovieAdviceContext _context;
 
-        public UnitOfWork(MovieContext context)
+        public UnitOfWork(MovieAdviceContext context)
         {
             _context = context;
         }

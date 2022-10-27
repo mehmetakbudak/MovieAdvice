@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\MovieAdvice.Infrastructure\MovieAdvice.Infrastructure.csproj" />
     <ProjectReference Include="..\MovieAdvice.Model\MovieAdvice.Model.csproj" />
   </ItemGroup>
 

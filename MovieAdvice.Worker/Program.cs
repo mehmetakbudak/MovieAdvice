@@ -13,7 +13,7 @@ IHost host = Host.CreateDefaultBuilder(args).ConfigureServices(services =>
 
 }).ConfigureServices((hostContext, services) =>
 {
-    services.AddDbContext<MovieContext>(options =>
+    services.AddDbContext<MovieAdviceContext>(options =>
         options.UseSqlServer(hostContext.Configuration.GetConnectionString("AppConnectionString"),
         options => options.EnableRetryOnFailure()));
 
