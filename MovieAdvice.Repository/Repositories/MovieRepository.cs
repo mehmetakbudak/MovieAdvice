@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using MovieAdvice.Model.Entities;
-using MovieAdvice.Model.Models;
+using MovieAdvice.Storage.Entities;
+using MovieAdvice.Storage.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +12,8 @@ namespace MovieAdvice.Repository.Repositories
     {
         IQueryable<Movie> GetAll();
         Task<List<Movie>> AddRange(List<MovieApiItemModel> list);
+        Task<Movie> GetById(int id);
+        Task<Movie> GetWithRatesById(int id);
     }
     public class MovieRepository : IMovieRepository
     {
@@ -62,6 +64,18 @@ namespace MovieAdvice.Repository.Repositories
             }
 
             return movies;
+        }
+
+        public async Task<Movie> GetById(int id)
+        {
+            return await _context.Movies.FindAsync(id);
+        }
+
+        public async Task<Movie> GetWithRatesById(int id)
+        {
+            return await _context.Movies
+                .Include(x => x.UserMovieRates)
+                .FirstOrDefaultAsync(x => x.Id == id);
         }
     }
 }

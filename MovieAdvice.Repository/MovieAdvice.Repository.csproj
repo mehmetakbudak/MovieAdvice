@@ -12,7 +12,11 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MovieAdvice.Infrastructure\MovieAdvice.Infrastructure.csproj" />
-    <ProjectReference Include="..\MovieAdvice.Model\MovieAdvice.Model.csproj" />
+    <ProjectReference Include="..\MovieAdvice.Storage\MovieAdvice.Storage.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Migrations\" />
   </ItemGroup>
 
 </Project>

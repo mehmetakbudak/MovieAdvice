@@ -1,17 +1,17 @@
-﻿using MovieAdvice.Infrastructure;
+﻿using Microsoft.AspNetCore.Http;
+using MovieAdvice.Infrastructure;
 using MovieAdvice.Infrastructure.Exceptions;
-using MovieAdvice.Model.Entities;
-using MovieAdvice.Model.Models;
 using MovieAdvice.Repository.Repositories;
-using System.Net;
+using MovieAdvice.Storage.Entities;
+using MovieAdvice.Storage.Models;
 using System.Threading.Tasks;
 
 namespace MovieAdvice.Service.Services
 {
     public interface IUserService
     {
-        Task<ServiceResult> Authenticate(LoginModel model);
-        Task<User> GetById(int id);
+        User GetById(int id);
+        Task<TokenReponseModel> Authenticate(LoginModel model);
     }
 
     public class UserService : IUserService
@@ -19,20 +19,26 @@ namespace MovieAdvice.Service.Services
         private readonly IUserRepository _userRepository;
         private readonly IJwtHelper _jwtHelper;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         public UserService(
             IUserRepository userRepository,
             IJwtHelper jwtHelper,
-            IUnitOfWork unitOfWork)
+            IUnitOfWork unitOfWork,
+            IHttpContextAccessor httpContextAccessor)
         {
             _userRepository = userRepository;
             _jwtHelper = jwtHelper;
             _unitOfWork = unitOfWork;
+            _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<ServiceResult> Authenticate(LoginModel model)
+        public async Task<TokenReponseModel> Authenticate(LoginModel model)
         {
-            var result = new ServiceResult { StatusCode = HttpStatusCode.OK };
+            if (model == null)
+            {
+                throw new BadRequestException("model null olamaz.");
+            }
 
             var user = await _userRepository.GetUser(model.Email, model.Password);
 
@@ -53,14 +59,20 @@ namespace MovieAdvice.Service.Services
 
             await _unitOfWork.SaveAsync();
 
-
+            var result = new TokenReponseModel()
+            {
+                UserId = user.Id,
+                Token = jwtToken.Token,
+                NameSurname = $"{user.FirstName} {user.LastName}",
+                TokenExpireDate = jwtToken.ExpireDate
+            };
 
             return result;
         }
 
-        public async Task<User> GetById(int id)
+        public User GetById(int id)
         {
-            return await _userRepository.GetById(id);
+            return _userRepository.GetById(id);
         }
     }
 }

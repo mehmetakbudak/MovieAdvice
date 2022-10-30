@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using MovieAdvice.Model.Entities;
-using System.Reflection.Metadata;
+using MovieAdvice.Infrastructure;
+using MovieAdvice.Storage.Entities;
 
 namespace MovieAdvice.Repository
 {
@@ -11,7 +11,9 @@ namespace MovieAdvice.Repository
         public virtual DbSet<Movie> Movies { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<UserMovieNote> UserMovieNotes { get; set; }
-        public virtual DbSet<UserMovieVote> UserMovieVotes { get; set; }
+        public virtual DbSet<UserMovieRate> UserMovieRates { get; set; }
+        public virtual DbSet<MailTemplate> MailTemplates { get; set; }
+        public virtual DbSet<WebsiteParameter> WebsiteParameters { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -19,12 +21,13 @@ namespace MovieAdvice.Repository
             modelBuilder.Entity<User>().HasData(
                 new User
                 {
+                    Id = 1,
                     Deleted = false,
                     Email = "admin@admin.com",
                     FirstName = "Mehmet",
                     LastName = "Akbudak",
                     IsActive = true,
-                    Password = ""
+                    Password = SecurityHelper.Sha256Hash("123456")
                 });
         }
     }

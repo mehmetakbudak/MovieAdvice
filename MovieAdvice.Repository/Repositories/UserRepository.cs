@@ -1,13 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MovieAdvice.Infrastructure;
-using MovieAdvice.Model.Entities;
+using MovieAdvice.Storage.Entities;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MovieAdvice.Repository.Repositories
 {
     public interface IUserRepository
     {
-        Task<User> GetById(int id);
+        User GetById(int id);
         Task<User> GetUser(string email, string password);
     }
 
@@ -20,9 +21,9 @@ namespace MovieAdvice.Repository.Repositories
             _context = context;
         }
 
-        public async Task<User> GetById(int id)
+        public User GetById(int id)
         {
-            return await _context.Users.FirstOrDefaultAsync(x => x.Id == id && x.IsActive);
+            return _context.Users.FirstOrDefault(x => x.Id == id && x.IsActive);
         }
 
         public async Task<User> GetUser(string email, string password)

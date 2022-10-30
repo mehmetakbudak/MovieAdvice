@@ -10,7 +10,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MovieAdvice.Model\MovieAdvice.Model.csproj" />
     <ProjectReference Include="..\MovieAdvice.Service\MovieAdvice.Service.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Configurations\" />
   </ItemGroup>
 </Project>

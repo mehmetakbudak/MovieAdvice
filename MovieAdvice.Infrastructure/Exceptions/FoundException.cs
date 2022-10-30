@@ -1,4 +1,4 @@
-﻿using MovieAdvice.Model.Models;
+﻿using MovieAdvice.Storage.Models;
 using System.Net;
 
 namespace MovieAdvice.Infrastructure.Exceptions

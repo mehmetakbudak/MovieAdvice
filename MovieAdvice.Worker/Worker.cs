@@ -1,9 +1,9 @@
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using MovieAdvice.Model.Models;
+using MovieAdvice.Infrastructure.Configurations;
 using MovieAdvice.Service.Services;
+using MovieAdvice.Storage.Models;
 using System;
 using System.Net.Http;
 using System.Text.Json;
@@ -15,22 +15,17 @@ namespace MovieAdvice.Worker
     public class Worker : BackgroundService
     {
         private readonly ILogger<Worker> _logger;
-        private readonly IConfiguration _configuration;
         private readonly IServiceProvider _serviceProvider;
 
         public Worker(ILogger<Worker> logger,
-            IConfiguration configuration,
             IServiceProvider serviceProvider)
         {
             _logger = logger;
-            _configuration = configuration;
             _serviceProvider = serviceProvider;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            int.TryParse(_configuration["SchedulePeriod"].ToString(), out int period);
-
             while (!stoppingToken.IsCancellationRequested)
             {
                 _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
@@ -50,21 +45,18 @@ namespace MovieAdvice.Worker
                     }
                 }
 
-                await Task.Delay(TimeSpan.FromMinutes(period), stoppingToken);
+                await Task.Delay(TimeSpan.FromMinutes(WorkerConfiguration.SchedulePeriod), stoppingToken);
             }
         }
 
 
-        public async Task<MovieApiResultModel> GetMoviesByPage(int page)
+        private async Task<MovieApiResultModel> GetMoviesByPage(int page)
         {
-            var baseUrl = _configuration["TheMovieApiSettings:BaseUrl"].ToString();
-            var apiKey = _configuration["TheMovieApiSettings:ApiKey"].ToString();
-
             using var client = new HttpClient();
             {
-                client.BaseAddress = new Uri(baseUrl);
+                client.BaseAddress = new Uri(WorkerConfiguration.TheMovieApi_BaseUrl);
 
-                var result = await client.GetAsync($"/3/discover/movie?api_key={apiKey}&page={page}");
+                var result = await client.GetAsync($"/3/discover/movie?api_key={WorkerConfiguration.TheMovieApi_ApiKey}&page={page}");
 
                 var json = await result.Content.ReadAsStringAsync();
 

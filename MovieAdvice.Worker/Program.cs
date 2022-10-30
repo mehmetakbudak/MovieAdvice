@@ -2,9 +2,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using MovieAdvice.Infrastructure.Configurations;
 using MovieAdvice.Repository;
-using MovieAdvice.Repository.Repositories;
-using MovieAdvice.Service.Services;
+using MovieAdvice.Service;
 using MovieAdvice.Worker;
 
 IHost host = Host.CreateDefaultBuilder(args).ConfigureServices(services =>
@@ -17,10 +17,9 @@ IHost host = Host.CreateDefaultBuilder(args).ConfigureServices(services =>
         options.UseSqlServer(hostContext.Configuration.GetConnectionString("AppConnectionString"),
         options => options.EnableRetryOnFailure()));
 
-    services.AddScoped<IUnitOfWork, UnitOfWork>();
-    services.AddScoped<IMovieService, MovieService>();
-    services.AddScoped<IMovieRepository, MovieRepository>();
+    WorkerConfiguration.Initialize(hostContext.Configuration);
 
+    IOCConfiguration.Initialize(services);
 
 }).Build();
 

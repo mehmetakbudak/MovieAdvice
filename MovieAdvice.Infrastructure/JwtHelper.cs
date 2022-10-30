@@ -1,7 +1,9 @@
 ﻿using Microsoft.IdentityModel.Tokens;
+using MovieAdvice.Infrastructure.Configurations;
 using MovieAdvice.Infrastructure.Exceptions;
-using MovieAdvice.Model.Entities;
-using MovieAdvice.Model.Models;
+using MovieAdvice.Storage.Consts;
+using MovieAdvice.Storage.Entities;
+using MovieAdvice.Storage.Models;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -20,13 +22,16 @@ namespace MovieAdvice.Infrastructure
         public JwtTokenModel GenerateJwtToken(User user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(Global.Secret);
+            var key = Encoding.ASCII.GetBytes(WebApiConfiguration.Secret);
             var expireDate = DateTime.Now.AddHours(2);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new[]
                 {
-                    new Claim("UserId", user.Id.ToString())
+                    new Claim(JwtTokenPayload.UserId, user.Id.ToString()),
+                    new Claim(JwtTokenPayload.FirstName, user.FirstName),
+                    new Claim(JwtTokenPayload.LastName, user.LastName),
+                    new Claim(JwtTokenPayload.Email, user.Email)
                 }),
                 Expires = expireDate,
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
@@ -48,7 +53,7 @@ namespace MovieAdvice.Infrastructure
             {
                 JwtSecurityToken jwtToken = null;
                 var tokenHandler = new JwtSecurityTokenHandler();
-                var key = Encoding.ASCII.GetBytes(Global.Secret);
+                var key = Encoding.ASCII.GetBytes(WebApiConfiguration.Secret);
                 tokenHandler.ValidateToken(token, new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,

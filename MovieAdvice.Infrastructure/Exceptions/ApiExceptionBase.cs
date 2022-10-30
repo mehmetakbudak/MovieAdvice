@@ -1,4 +1,4 @@
-﻿using MovieAdvice.Model.Models;
+﻿using MovieAdvice.Storage.Models;
 using System;
 using System.Net;
 
